@@ -1,0 +1,57 @@
+version: "3.0"
+
+rules:
+
+  - rule: greet
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - rule: Chitchat
+    steps:
+      - intent: chitchat
+      - action: utter_chitchat
+
+  - rule: Thank you
+    steps:
+      - intent: thankyou
+      - action: utter_noworries
+
+  - rule: Say 'I am a bot' anytime the user challenges
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
+
+  - rule: Activate anime form
+    steps:
+      - intent: request_anime
+      - action: anime_form
+      - active_loop: anime_form
+
+  - rule: Search anime
+    condition:
+      - active_loop: anime_form
+    steps:
+      - action: anime_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_search_anime
+
+  - rule: Interruption in anime form with bot challenge
+    condition:
+      - active_loop: anime_form
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
+      - action: anime_form
+      - active_loop: anime_form
+
+  - rule: Interruption in anime form with chitchat
+    condition:
+      - active_loop: anime_form
+    steps:
+      - intent: chitchat
+      - action: utter_chitchat
+      - action: anime_form
+      - active_loop: anime_form

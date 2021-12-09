@@ -1,0 +1,228 @@
+version: "3.0"
+
+stories:
+- story: stop form + continue (unhappy path)
+  steps:
+    - intent: request_anime
+    - action: anime_form
+    - active_loop: anime_form
+    - intent: stop
+    - action: utter_ask_continue
+    - intent: deny
+    - action: anime_form
+    - active_loop: null
+    - action: action_search_anime
+
+- story: stop form + stop (unhappy path)
+  steps:
+    - intent: request_anime
+    - action: anime_form
+    - active_loop: anime_form
+    - intent: stop
+    - action: utter_ask_continue
+    - or:
+        - intent: stop
+        - intent: affirm
+    - action: action_deactivate_loop
+    - active_loop: null
+
+- story: interactive_story_1 (happy path)
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_anime
+  - action: anime_form
+  - active_loop: anime_form
+  - slot_was_set:
+    - requested_slot: anime_genre
+  - slot_was_set:
+    - anime_genre: fantasy
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - slot_was_set:
+    - anime_rating: r17
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - slot_was_set:
+    - by_popularity: true
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_search_anime
+  - slot_was_set:
+    - anime:
+      - score: 8.52
+        title: Shingeki no Kyojin
+      - score: 9.15
+        title: 'Fullmetal Alchemist: Brotherhood'
+      - score: 8.49
+        title: Shingeki no Kyojin Season 2
+      - score: 8.26
+        title: Re:Zero kara Hajimeru Isekai Seikatsu
+      - score: 8.62
+        title: Shingeki no Kyojin Season 3
+  - intent: thankyou
+  - action: utter_noworries
+
+- story: interactive_story_2 (happy path)
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_anime
+    entities:
+    - anime_genre: mystery
+  - slot_was_set:
+    - anime_genre: mystery
+  - action: anime_form
+  - active_loop: anime_form
+  - slot_was_set:
+    - anime_genre: mystery
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - slot_was_set:
+    - anime_rating: r17
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - slot_was_set:
+    - by_popularity: true
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_search_anime
+  - slot_was_set:
+    - anime:
+      - score: 8.63
+        title: Death Note
+      - score: 8.52
+        title: Shingeki no Kyojin
+      - score: 7.8
+        title: Tokyo Ghoul
+      - score: 8.49
+        title: Shingeki no Kyojin Season 2
+      - score: 8.62
+        title: Shingeki no Kyojin Season 3
+  - intent: thankyou
+  - action: utter_noworries
+
+- story: interactive_story_3 (unhappy path with chitchat and bot_challenge)
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_anime
+    entities:
+    - anime_genre: romance
+  - slot_was_set:
+    - anime_genre: romance
+  - action: anime_form
+  - active_loop: anime_form
+  - slot_was_set:
+    - anime_genre: romance
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - intent: chitchat
+  - action: utter_chitchat
+  - action: anime_form
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - slot_was_set:
+    - anime_rating: r17
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - intent: bot_challenge
+  - action: utter_iamabot
+  - action: anime_form
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - slot_was_set:
+    - by_popularity: true
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_search_anime
+  - slot_was_set:
+    - anime:
+      - score: 8.35
+        title: Bakemonogatari
+      - score: 7.46
+        title: Guilty Crown
+      - score: 7.18
+        title: Date A Live
+      - score: 7.3
+        title: Fate/stay night
+      - score: 7.56
+        title: 'Sword Art Online: Alicization'
+  - intent: thankyou
+  - action: utter_noworries
+
+- story: interactive_story_4 (unhappy path, stopping form)
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_anime
+    entities:
+    - anime_genre: comedy
+  - slot_was_set:
+    - anime_genre: comedy
+  - action: anime_form
+  - active_loop: anime_form
+  - slot_was_set:
+    - anime_genre: comedy
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - intent: stop
+  - action: utter_ask_continue
+  - intent: affirm
+  - action: action_deactivate_loop
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - intent: chitchat
+  - action: utter_chitchat
+  - intent: thankyou
+  - action: utter_noworries
+
+- story: interactive_story_5 (unhappy path, stopping then continuing form)
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_anime
+    entities:
+    - anime_genre: comedy
+  - slot_was_set:
+    - anime_genre: comedy
+  - action: anime_form
+  - active_loop: anime_form
+  - slot_was_set:
+    - anime_genre: comedy
+  - slot_was_set:
+    - requested_slot: anime_rating
+  - slot_was_set:
+    - anime_rating: pg13
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - intent: stop
+  - action: utter_ask_continue
+  - intent: deny
+  - action: anime_form
+  - slot_was_set:
+    - requested_slot: by_popularity
+  - slot_was_set:
+    - by_popularity: true
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_search_anime
+  - slot_was_set:
+    - anime:
+      - score: 7.98
+        title: Boku no Hero Academia
+      - score: 7.96
+        title: Naruto
+      - score: 8.2
+        title: Boku no Hero Academia 2nd Season
+      - score: 8.13
+        title: No Game No Life
+      - score: 8.22
+        title: 'Naruto: Shippuuden'
+  - intent: thankyou
+  - action: utter_noworries

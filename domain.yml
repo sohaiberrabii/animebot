@@ -1,0 +1,118 @@
+version: '3.0'
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+
+intents:
+- deny
+- affirm
+- chitchat
+- greet
+- thankyou
+- request_anime
+- stop
+- inform
+- bot_challenge
+
+
+entities:
+- anime_genre
+- anime_rating
+- by_popularity
+
+
+slots:
+  anime_rating:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: anime_rating
+
+  anime_genre:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: anime_genre
+      intent:
+      - inform
+      - request_anime
+
+  by_popularity:
+    type: bool
+    influence_conversation: false
+    mappings:
+    - type: from_intent
+      intent: deny
+      value: false
+      conditions:
+      - active_loop: anime_form
+        requested_slot: by_popularity
+    - type: from_intent
+      intent: affirm
+      value: true
+      conditions:
+      - active_loop: anime_form
+        requested_slot: by_popularity
+
+  anime:
+    type: list
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+
+responses:
+  utter_ask_anime_genre:
+  - text: What genre are you interested in ?
+
+  utter_ask_anime_rating:
+  - text: Please choose the rating
+    buttons:
+    - title: g
+      payload: /inform{{"anime_rating":"g"}}
+    - title: pg
+      payload: /inform{{"anime_rating":"pg"}}
+    - title: pg13
+      payload: /inform{{"anime_rating":"pg13"}}
+    - title: r17
+      payload: /inform{{"anime_rating":"r17"}}
+
+  utter_ask_by_popularity:
+  - text: Would you like to search by popularity?
+    buttons:
+    - title: yes
+      payload: /affirm
+    - title: no
+      payload: /deny
+
+  utter_ask_continue:
+  - text: Are you sure?
+
+  utter_chitchat:
+  - text: chitchat
+
+  utter_greet:
+  - text: Hey! How can i help you?
+
+  utter_noworries:
+  - text: You are welcome :)
+
+  utter_iamabot:
+  - text: I am a bot, powered by Rasa.
+
+
+actions:
+- action_search_anime
+- validate_anime_form
+
+
+forms:
+  anime_form:
+    required_slots:
+    - anime_genre
+    - anime_rating
+    - by_popularity
