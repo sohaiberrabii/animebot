@@ -40,10 +40,10 @@ rasa shell
 ## Examples
 
 ### Happy path
-[happy path](happy_path.png)
+![happy path](happy_path.png)
 
 ### Un-Happy path (Stop the form then continue)
-[unhappy_path](unhappy_path_stop_continue.png)
+![unhappy_path](unhappy_path_stop_continue.png)
 
 ## Note
 Sometimes the API call fails, I should have picked a more reliable API :(
